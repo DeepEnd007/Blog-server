@@ -8,7 +8,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
+import authRoutes from "./routes/auth.js";
 import { register } from "./controllers/auth.js";
+import { verifyToken } from "./middleware/auth.js";
 
 // CONFIGURATION
 const __filename = fileURLToPath(import.meta.url);
@@ -38,6 +40,12 @@ const upload = multer({ storage });
 
 /* Route with Files */
 app.post("/auth/register", upload.single("picture"), register);
+
+/* Routes */
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+//"/auth": 这个路径用于处理与身份验证相关的路由，比如用户注册、登录、登出等操作。这些功能通常属于认证和授权的范畴。
+//"/users": 这个路径用于处理与用户管理相关的路由，比如获取用户资料、更新用户资料等操作。这些功能通常涉及用户信息的管理和操作。
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
